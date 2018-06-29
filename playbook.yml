@@ -32,3 +32,6 @@
       - python-devel
   - name: install salt
     shell: source /opt/cloudbreak_salt_env/bin/activate && pip install salt==2017.7.6
+  - name: create salt configs
+    shell: >
+      mkdir /etc/salt && touch /etc/salt/master && touch /etc/salt/minion && echo 'master: 192.168.50.10' >> /etc/salt/minion
