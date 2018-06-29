@@ -1,0 +1,10 @@
+[Unit]
+Description=The Salt Master
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/cloudbreak_salt_env/bin/python /opt/cloudbreak_salt_env/bin/salt-master
+
+[Install]
+WantedBy=multi-user.target
