@@ -5,21 +5,7 @@
     yum:
      name: epel-release
      state: present
-  - name: install python-pip
-    yum:
-     name: python-pip
-     state: present
-  - name: install virtualenv with pip
-    shell: pip install virtualenv
-  - name: create directory for virtualenv
-    shell: mkdir /opt/cloudbreak_salt_env
-  - name: create virtualenv enviornment
-    shell: virtualenv /opt/cloudbreak_salt_env
-  - name: install the 'Development tools' package group
-    yum:
-     name: "@Development tools"
-     state: present
-  - name: install salt dependencies
+  - name: install salt dependencies including python-pip
     yum:
      name: "{{ packages }}"
     vars:
@@ -28,10 +14,20 @@
       - gcc-c++
       - autoconf
       - automake
-      - zeromq-devel
+      - python-pip
       - python-devel
-  - name: install salt
-    shell: source /opt/cloudbreak_salt_env/bin/activate && pip install salt==2017.7.6
+  - name: install the 'Development tools' package group
+    yum:
+     name: "@Development tools"
+     state: present
+  - name: install virtualenv with pip
+    shell: pip install virtualenv
+  - name: create directory for virtualenv
+    shell: mkdir /opt/cloudbreak_salt_env
+  - name: create virtualenv enviornment
+    shell: virtualenv /opt/cloudbreak_salt_env
+  - name: install zeromq and salt
+    shell: source /opt/cloudbreak_salt_env/bin/activate && pip install pyzmq && pip install salt==2017.7.6
   - name: create salt configs
     shell: |
       mkdir /etc/salt && touch /etc/salt/master && touch /etc/salt/minion && echo 'master: 192.168.50.10' >> /etc/salt/minion
@@ -44,9 +40,12 @@
   - name: run salt-master
     shell: |
       systemctl start salt-master
+      systemctl enable salt-master.service
 #      source /opt/cloudbreak_salt_env/bin/activate && salt-key -A -y
 
 - hosts: minion1, minion2
   tasks:
   - name: run salt-minion
-    shell: systemctl start salt-minion
+    shell: |
+      systemctl start salt-minion
+      systemctl enable salt-minion.service
