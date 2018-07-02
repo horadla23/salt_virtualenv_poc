@@ -38,6 +38,8 @@
     shell: |
       systemctl start salt-master
       systemctl enable salt-master.service
+      systemctl start salt-api
+      systemctl enable salt-api.service
 #      source /opt/cloudbreak_salt_env/bin/activate && salt-key -A -y
 
 - hosts: minion1, minion2
