@@ -16,10 +16,7 @@
       - automake
       - python-pip
       - python-devel
-  - name: install the 'Development tools' package group
-    yum:
-     name: "@Development tools"
-     state: present
+      - "@Development tools"
   - name: install virtualenv with pip
     shell: pip install virtualenv
   - name: create directory for virtualenv
