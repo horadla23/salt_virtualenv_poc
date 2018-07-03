@@ -1,0 +1,19 @@
+---
+- name: create salt minion config
+  file:
+    path: /etc/salt/minion
+    state: touch
+- name: add master address to minion config
+  copy:
+    content: 'master: 192.168.50.10'
+    dest: /etc/salt/minion
+- template:
+    src: salt-service-template.j2
+    dest: /usr/lib/systemd/system/salt-minion.service
+  vars:
+    service_description: "Salt Minion"
+    salt_component_name: salt-minion
+- name: run salt-minion
+  shell: |
+    systemctl start salt-minion
+    systemctl enable salt-minion.service

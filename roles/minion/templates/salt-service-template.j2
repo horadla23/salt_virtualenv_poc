@@ -1,0 +1,11 @@
+[Unit]
+Description={{ service_description }}
+After=syslog.target network.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/opt/salt_{{ salt_version }}/bin/python /opt/salt_{{ salt_version }}/bin/{{ salt_component_name }}
+
+[Install]
+WantedBy=multi-user.target
