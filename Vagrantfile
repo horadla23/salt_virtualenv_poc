@@ -19,9 +19,9 @@ Vagrant.configure("2") do |config|
   end
 
   [
-    ["minion1",    "#{net_ip}.11",    "1024",    os, "2221" ],
-    ["minion2",    "#{net_ip}.12",    "1024",    os, "2222" ],
-  ].each do |vmname,ip,mem,os,ssh_port|
+    ["minion1",    "#{net_ip}.11",    "1024",    os],
+    ["minion2",    "#{net_ip}.12",    "1024",    os],
+  ].each do |vmname,ip,mem,os|
     config.vm.define "#{vmname}" do |minion_config|
       minion_config.vm.provider "virtualbox" do |vb|
           vb.memory = "#{mem}"
