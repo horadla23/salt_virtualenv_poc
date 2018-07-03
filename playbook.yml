@@ -22,7 +22,7 @@
   - name: create virtualenv enviornment
     shell: virtualenv /opt/salt_{{ salt_version  }}
   - name: install zeromq and salt
-    shell: source /opt/salt_{{ salt_version  }}/bin/activate && pip install pyzmq && pip install salt=={{ salt_version  }}
+    shell: source /opt/salt_{{ salt_version  }}/bin/activate && pip install pyzmq==14.5.0 && pip install salt=={{ salt_version  }}
   - name: create salt configs
     shell: |
       mkdir /etc/salt && touch /etc/salt/master && touch /etc/salt/minion && echo 'master: 192.168.50.10' >> /etc/salt/minion
