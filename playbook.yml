@@ -1,7 +1,5 @@
 ---
 - hosts: all
-  vars:
-    salt_version: 2017.7.5
   tasks:
   - name: enable epel release repo
     yum:
@@ -18,19 +16,24 @@
   - name: install virtualenv with pip
     shell: pip install virtualenv
   - name: create directory for virtualenv
-    shell: mkdir /opt/salt_{{ salt_version  }}
+    file:
+     path: /opt/salt_{{ salt_version }}
+     state: directory
   - name: create virtualenv enviornment
-    shell: virtualenv /opt/salt_{{ salt_version  }}
+    shell: virtualenv /opt/salt_{{ salt_version }}
   - name: install zeromq and salt
-    shell: source /opt/salt_{{ salt_version  }}/bin/activate && pip install pyzmq==14.5.0 && pip install salt=={{ salt_version  }}
-  - name: create salt configs
-    shell: |
-      mkdir /etc/salt && touch /etc/salt/master && touch /etc/salt/minion && echo 'master: 192.168.50.10' >> /etc/salt/minion
+    shell: source /opt/salt_{{ salt_version }}/bin/activate && pip install pyzmq=={{ pyzmq_version }} && pip install salt=={{ salt_version }}
+  - name: create salt config directory
+    file:
+     path: /etc/salt
+     state: directory
 
 - hosts: master
-  vars:
-   virtual_env_name: salt_2017.7.5
   tasks:
+  - name: create salt master config
+    file:
+     path: /etc/salt/master
+     state: touch
   - template:
       src: salt-service-template.j2
       dest: /usr/lib/systemd/system/salt-master.service
@@ -51,9 +54,15 @@
       systemctl enable salt-api.service
 
 - hosts: minion1, minion2
-  vars:
-   virtual_env_name: salt_2017.7.5
   tasks:
+  - name: create salt minion config
+    file:
+     path: /etc/salt/minion
+     state: touch
+  - name: add master address to minion config
+    copy:
+     content: 'master: 192.168.50.10'
+     dest: /etc/salt/minion
   - template:
       src: salt-service-template.j2
       dest: /usr/lib/systemd/system/salt-minion.service
