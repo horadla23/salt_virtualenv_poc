@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  vars:
+    salt_version: 2017.7.5
   tasks:
   - name: enable epel release repo
     yum:
@@ -10,40 +12,54 @@
      name: "{{ packages }}"
     vars:
      packages:
-      - gcc
-      - gcc-c++
-      - autoconf
-      - automake
+      - "@Development tools"
       - python-pip
       - python-devel
-      - "@Development tools"
   - name: install virtualenv with pip
     shell: pip install virtualenv
   - name: create directory for virtualenv
-    shell: mkdir /opt/cloudbreak_salt_env
+    shell: mkdir /opt/salt_{{ salt_version  }}
   - name: create virtualenv enviornment
-    shell: virtualenv /opt/cloudbreak_salt_env
+    shell: virtualenv /opt/salt_{{ salt_version  }}
   - name: install zeromq and salt
-    shell: source /opt/cloudbreak_salt_env/bin/activate && pip install pyzmq && pip install salt==2017.7.6
+    shell: source /opt/salt_{{ salt_version  }}/bin/activate && pip install pyzmq && pip install salt=={{ salt_version  }}
   - name: create salt configs
     shell: |
       mkdir /etc/salt && touch /etc/salt/master && touch /etc/salt/minion && echo 'master: 192.168.50.10' >> /etc/salt/minion
-      cp /vagrant/salt-master.service /usr/lib/systemd/system/salt-master.service
-      cp /vagrant/salt-minion.service /usr/lib/systemd/system/salt-minion.service
-      cp /vagrant/salt-api.service /usr/lib/systemd/system/salt-api.service
 
 - hosts: master
+  vars:
+   virtual_env_name: salt_2017.7.5
   tasks:
+  - template:
+      src: salt-service-template.j2
+      dest: /usr/lib/systemd/system/salt-master.service
+    vars:
+      service_description: "Salt Master"
+      salt_component_name: salt-master
+  - template:
+      src: salt-service-template.j2
+      dest: /usr/lib/systemd/system/salt-api.service
+    vars:
+      service_description: "Salt API"
+      salt_component_name: salt-api
   - name: run salt-master
     shell: |
       systemctl start salt-master
       systemctl enable salt-master.service
       systemctl start salt-api
       systemctl enable salt-api.service
-#      source /opt/cloudbreak_salt_env/bin/activate && salt-key -A -y
 
 - hosts: minion1, minion2
+  vars:
+   virtual_env_name: salt_2017.7.5
   tasks:
+  - template:
+      src: salt-service-template.j2
+      dest: /usr/lib/systemd/system/salt-minion.service
+    vars:
+      service_description: "Salt Minion"
+      salt_component_name: salt-minion
   - name: run salt-minion
     shell: |
       systemctl start salt-minion
