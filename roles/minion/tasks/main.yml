@@ -7,7 +7,8 @@
   copy:
     content: 'master: 192.168.50.10'
     dest: /etc/salt/minion
-- template:
+- name: salt minion service template copy
+  template:
     src: salt-service-template.j2
     dest: /usr/lib/systemd/system/salt-minion.service
   vars:

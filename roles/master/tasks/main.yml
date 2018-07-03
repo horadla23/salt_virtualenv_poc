@@ -3,13 +3,15 @@
   file:
     path: /etc/salt/master
     state: touch
-- template:
+- name: salt master service template copy
+  template:
     src: salt-service-template.j2
     dest: /usr/lib/systemd/system/salt-master.service
   vars:
     service_description: "Salt Master"
     salt_component_name: salt-master
-- template:
+- name: salt api service template copy
+  template:
     src: salt-service-template.j2
     dest: /usr/lib/systemd/system/salt-api.service
   vars:

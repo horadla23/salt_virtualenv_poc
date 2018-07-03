@@ -18,7 +18,7 @@
   file:
    path: /opt/salt_{{ salt_version }}
    state: directory
-- name: create virtualenv enviornment
+- name: create virtualenv environment
   shell: virtualenv /opt/salt_{{ salt_version }}
 - name: install zeromq and salt
   shell: source /opt/salt_{{ salt_version }}/bin/activate && pip install pyzmq=={{ pyzmq_version }} && pip install salt=={{ salt_version }}
@@ -26,3 +26,5 @@
   file:
    path: /etc/salt
    state: directory
+- name: disable zeromq and salt to install with yum package manager
+  shell: echo "exclude=zeromq zeromq-devel salt" >> /etc/yum.conf
