@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
    net_ip = "192.168.50"
 
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbook.yml"
+    ansible.playbook = "salt.yml"
 #    ansible.verbose  = true
   end
 
@@ -14,14 +14,14 @@ Vagrant.configure("2") do |config|
         vb.name = "master"
     end
     master_config.vm.box = "#{os}"
-    master_config.vm.host_name = 'saltmaster.local'
+    master_config.vm.hostname = 'saltmaster'
     master_config.vm.network "private_network", ip: "#{net_ip}.10"
   end
 
   [
-    ["minion1",    "#{net_ip}.11",    "1024",    os ],
-    ["minion2",    "#{net_ip}.12",    "1024",    os ],
-  ].each do |vmname,ip,mem,os|
+    ["minion1",    "#{net_ip}.11",    "1024",    os, "2221" ],
+    ["minion2",    "#{net_ip}.12",    "1024",    os, "2222" ],
+  ].each do |vmname,ip,mem,os,ssh_port|
     config.vm.define "#{vmname}" do |minion_config|
       minion_config.vm.provider "virtualbox" do |vb|
           vb.memory = "#{mem}"

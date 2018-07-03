@@ -1,0 +1,28 @@
+---
+
+- name: enable epel release repo
+  yum:
+   name: epel-release
+   state: present
+- name: install salt dependencies including python-pip
+  yum:
+   name: "{{ packages }}"
+  vars:
+   packages:
+    - "@Development tools"
+    - python-pip
+    - python-devel
+- name: install virtualenv with pip
+  shell: pip install virtualenv
+- name: create directory for virtualenv
+  file:
+   path: /opt/salt_{{ salt_version }}
+   state: directory
+- name: create virtualenv enviornment
+  shell: virtualenv /opt/salt_{{ salt_version }}
+- name: install zeromq and salt
+  shell: source /opt/salt_{{ salt_version }}/bin/activate && pip install pyzmq=={{ pyzmq_version }} && pip install salt=={{ salt_version }}
+- name: create salt config directory
+  file:
+   path: /etc/salt
+   state: directory

@@ -1,0 +1,12 @@
+---
+- hosts: all
+  roles:
+  - common
+
+- hosts: master
+  roles:
+  - master
+
+- hosts: minion1, minion2
+  roles:
+  - minion
