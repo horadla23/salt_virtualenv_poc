@@ -3,6 +3,10 @@
   file:
     path: /etc/salt/master
     state: touch
+- name: add log destination to master config
+  copy:
+    content: "log_file: /opt/salt_{{ salt_version }}/log/salt/master\nlog_level: debug\n"
+    dest: /etc/salt/master
 - name: salt master service template copy
   template:
     src: salt-service-template.j2

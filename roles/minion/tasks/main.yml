@@ -3,9 +3,9 @@
   file:
     path: /etc/salt/minion
     state: touch
-- name: add master address to minion config
+- name: add master address and log destination to minion config
   copy:
-    content: 'master: 192.168.50.10'
+    content: "master: 192.168.50.10\nlog_file: /opt/salt_{{ salt_version }}/log/salt/minion\nlog_level: debug\n"
     dest: /etc/salt/minion
 - name: salt minion service template copy
   template:
