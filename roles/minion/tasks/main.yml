@@ -1,12 +1,10 @@
----
-- name: create salt minion config
-  file:
-    path: /etc/salt/minion
-    state: touch
-- name: add master address and log destination to minion config
-  copy:
-    content: "master: 192.168.50.10\nlog_file: /opt/salt_{{ salt_version }}/log/salt/minion\nlog_level: debug\n"
+--- 
+- name: salt minion config template copy
+  template:
+    src: minion.j2
     dest: /etc/salt/minion
+  vars:
+    master_ip: 192.168.50.10
 - name: salt minion service template copy
   template:
     src: salt-service-template.j2

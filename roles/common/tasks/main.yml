@@ -1,5 +1,11 @@
 ---
-
+- name: Add the user 'johnd' with a primary group of 'admin'
+  user:
+    name: saltuser
+    comment: saltuser
+    password: $6$fQ4y018Y3NvmvCQZ$kUdbbKx8LZq/J7wWYVOAYFFy96tuLlJLoL9CP1nTlPe6wc.Lp6TbQDmkqagNy7qVSnpvafv1cQaAqOgV3iC6f.
+    #saltuser
+    group: root
 - name: enable epel release repo
   yum:
    name: epel-release
@@ -24,6 +30,8 @@
   shell: |
     source /opt/salt_{{ salt_version }}/bin/activate
     pip install pyzmq=={{ pyzmq_version }}
+    pip install CherryPy
+    pip install PyOpenSSL
     pip install salt=={{ salt_version }}
 - name: create salt config directory
   file:

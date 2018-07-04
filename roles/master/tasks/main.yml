@@ -1,11 +1,11 @@
 ---
-- name: create salt master config
-  file:
-    path: /etc/salt/master
-    state: touch
-- name: add log destination to master config
-  copy:
-    content: "log_file: /opt/salt_{{ salt_version }}/log/salt/master\nlog_level: debug\n"
+- name: generate local ssl cert for salt api
+  shell: |
+    source /opt/salt_{{ salt_version }}/bin/activate
+    salt-call --local tls.create_self_signed_cert
+- name: salt master config template copy
+  template:
+    src: master.j2
     dest: /etc/salt/master
 - name: salt master service template copy
   template:
