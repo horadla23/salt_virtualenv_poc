@@ -21,7 +21,10 @@
 - name: create virtualenv environment
   shell: virtualenv /opt/salt_{{ salt_version }}
 - name: install zeromq and salt
-  shell: source /opt/salt_{{ salt_version }}/bin/activate && pip install pyzmq=={{ pyzmq_version }} && pip install salt=={{ salt_version }}
+  shell: |
+    source /opt/salt_{{ salt_version }}/bin/activate
+    pip install pyzmq=={{ pyzmq_version }}
+    pip install salt=={{ salt_version }}
 - name: create salt config directory
   file:
    path: /etc/salt
