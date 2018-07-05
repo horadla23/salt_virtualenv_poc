@@ -13,14 +13,14 @@
     dest: /usr/lib/systemd/system/salt-master.service
   vars:
     service_description: "Salt Master"
-    salt_component_name: salt-master
+    salt_binary_with_args: salt-master
 - name: salt api service template copy
   template:
     src: salt-service-template.j2
     dest: /usr/lib/systemd/system/salt-api.service
   vars:
     service_description: "Salt API"
-    salt_component_name: salt-api
+    salt_binary_with_args: salt-api --log-file=/opt/salt_{{ salt_version }}/log/salt/api
 - name: run salt-master
   shell: |
     systemctl start salt-master

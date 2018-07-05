@@ -11,7 +11,7 @@
     dest: /usr/lib/systemd/system/salt-minion.service
   vars:
     service_description: "Salt Minion"
-    salt_component_name: salt-minion
+    salt_binary_with_args: salt-minion
 - name: run salt-minion
   shell: |
     systemctl start salt-minion
